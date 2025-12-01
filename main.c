@@ -1,12 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+#include <string.h>
 
 #define SMALL_GRID 3
 #define WHOLE_GRID 10
 
-void printCharGreenBg(char character)
+void printColoredChar(char character, char *color)
 {
-    printf("\033[42m %c \033[m", character);
+    if (!strcmp(color, "green"))
+    {
+        printf("\033[42m %c \033[m", character);
+    }
+    else if (!strcmp(color, "red"))
+    {
+        printf("\033[41m %c \033[m", character);
+    }
+    else
+    {
+        printf(" %c ", character);
+    }
 }
 
 typedef struct Sensor
@@ -50,7 +63,7 @@ void printSensor(Sensor *sensor)
     {
         for (int j = 0; j < SMALL_GRID; j++)
         {
-            printCharGreenBg(sensor->matrix[i][j]);
+            printColoredChar(sensor->matrix[i][j], "green");
         }
         printf("\n");
     }
@@ -99,17 +112,46 @@ void printSensorGrid(Sensor *grid[WHOLE_GRID][WHOLE_GRID])
                 if (i == 0)
                     printf("%4ld ", iIdx++);
                 for (size_t iSensor = 0; iSensor < SMALL_GRID; iSensor++)
-                    printCharGreenBg(grid[i][j]->matrix[iSensor][jSensor]);
+                {
+                    char currentCell = grid[i][j]->matrix[iSensor][jSensor];
+                    if (currentCell == '@')
+                        printColoredChar(grid[i][j]->matrix[iSensor][jSensor], "red");
+                    else
+                        printColoredChar(grid[i][j]->matrix[iSensor][jSensor], "green");
+                }
             }
             printf("\n");
         }
     }
 }
 
+void fire(Sensor *grid[WHOLE_GRID][WHOLE_GRID])
+{
+    const int MAX_COORD = SMALL_GRID * WHOLE_GRID;
+
+    int global_row = rand() % MAX_COORD;
+    int global_col = rand() % MAX_COORD;
+
+    // int division to get the grid coordinate
+    int grid_row = global_row / SMALL_GRID;
+    int grid_col = global_col / SMALL_GRID;
+
+    // getting the module results gives us a number from 0 to 2
+    int sensor_row = global_row % SMALL_GRID;
+    int sensor_col = global_col % SMALL_GRID;
+
+    // put fire on cell ('@')
+    grid[grid_row][grid_col]->matrix[sensor_row][sensor_col] = '@';
+}
+
 int main(int argc, char const *argv[])
 {
+    srand(time(NULL));
+
     Sensor *sensors[WHOLE_GRID][WHOLE_GRID];
     initiateGrid(sensors);
+
+    fire(sensors);
 
     printSensorGrid(sensors);
 
