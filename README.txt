@@ -1,9 +1,9 @@
- PROJETO: Simulador de um Sistema Detector de Incêndios Florestais
-
-================================================================================
+ ================================================================================
 SISTEMAS OPERACIONAIS - 2025/2
 PROFESSOR: João Victor de A. Oliveira
 ================================================================================
+
+PROJETO: Simulador de um Sistema Detector de Incêndios Florestais
 
 AUTORES:
 1. Marlon Ferreira de Sá
