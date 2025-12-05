@@ -154,8 +154,8 @@ void *sensorThread(void *arg)
                     // function to send signal to neighbours
                     Message msg;
                     msg.sensor_id = sensor->id;
-                    msg.cordx = (sensor->cordX * SMALL_GRID) + j;
-                    msg.cordy = (sensor->cordY * SMALL_GRID) + i;
+                    msg.cordx = (sensor->cordX * SMALL_GRID) + i;
+                    msg.cordy = (sensor->cordY * SMALL_GRID) + j;
                     getCurrentTime(msg.time);
                     msg.active = 1;
 
