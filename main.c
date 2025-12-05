@@ -261,6 +261,9 @@ void printSensorGrid(Sensor *grid[WHOLE_GRID][WHOLE_GRID])
         {
             for (size_t i = 0; i < WHOLE_GRID; i++)
             {
+                // lock sensor before accessing it avoiding race condition
+                pthread_mutex_lock(&grid[i][j]->lock);
+                
                 // printing vertical coordinates to better visualization
                 if (i == 0)
                     printf("%4ld ", iIdx++);
@@ -272,6 +275,7 @@ void printSensorGrid(Sensor *grid[WHOLE_GRID][WHOLE_GRID])
                     else
                         printColoredChar(grid[i][j]->matrix[iSensor][jSensor], "green");
                 }
+                pthread_mutex_unlock(&grid[i][j]->lock);
             }
             printf("\n");
         }
@@ -349,12 +353,12 @@ int main(int argc, char const *argv[])
     while (1)
     {
         if (fire_timer % 5 == 0)
-            fire(sensors);
-
+           fire(sensors);
+        
         system("clear");
         printSensorGrid(sensors);
         sleep(1);
-        fire_timer+=5;
+        fire_timer++;
     }
     
     freeGrid(sensors);
